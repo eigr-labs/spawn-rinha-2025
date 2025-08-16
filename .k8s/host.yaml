@@ -1,0 +1,16 @@
+---
+apiVersion: spawn-eigr.io/v1
+kind: ActorHost
+metadata:
+  name: rinha-payments
+  namespace: default
+  annotations:
+    spawn-eigr.io/actor-system: spawn-system
+spec:
+  host:
+    image: ttl.sh/spawn-elixir-example:1h
+    ports:
+      - name: http
+        containerPort: 8090
+  autoscaler:
+    max: 3

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package io.eigr.labs.spawn.rinha.actors;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "payments/payment.proto";
+import "spawn/actors/extensions.proto";
+
+service PaymentActor {
+  option (.spawn.actors.actor) = {
+    kind: UNNAMED
+    stateful: true
+    state_type: ".io.eigr.labs.spawn.rinha.PaymentActorState"
+    snapshot_interval: 60000
+    deactivate_timeout: 3000
+  };
+
+  rpc Payment(.io.eigr.labs.spawn.rinha.Payment) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post : "/payments"
+      body : "*"
+    };
+  }
+}

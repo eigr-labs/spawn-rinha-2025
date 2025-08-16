@@ -1,0 +1,13 @@
+---
+apiVersion: spawn-eigr.io/v1
+kind: ActorSystem
+metadata:
+  name: spawn-system
+  namespace: default
+spec:
+  statestore:
+    type: mariadb
+    credentialsSecretRef: "mariadb-connection-secret"
+  externalInvocation:
+    enabled: "true"
+    externalConnectorRef: invocation-connection-ref-secret

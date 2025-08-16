@@ -1,0 +1,89 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:11.3
+    hostname: db
+    environment:
+      - MARIADB_ROOT_PASSWORD=rinha
+      - MARIADB_USER=rinha
+      - MARIADB_PASSWORD=rinha
+      - MARIADB_DATABASE=rinha
+    ports:
+      - "3307:3306"
+    command: --max_connections=450 --key_buffer_size=32M --query_cache_size=0 --innodb_buffer_pool_size=96M --innodb_log_file_size=12M --innodb_flush_log_at_trx_commit=0 --sync_binlog=0
+    networks:
+      - rinha-net
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u rinha -prinha"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: "80MB"
+
+  api01: &api
+    image: eigr-labs/rinha-2025:0.0.1
+    hostname: api01
+    environment:
+      - MIX_ENV=dev
+      - PROXY_ACTOR_SYSTEM_NAME=spawn-system
+      - PROXY_DATABASE_TYPE=mariadb
+      - PROXY_DATABASE_HOST=db
+      - PROXY_DATABASE_NAME=rinha
+      - PROXY_DATABASE_PORT=3306
+      - PROXY_DATABASE_POOL_SIZE=10
+      - PROXY_DATABASE_USERNAME=rinha
+      - PROXY_DATABASE_SECRET=rinha
+      - SPAWN_STATESTORE_KEY=3Jnb0hZiHIzHTOih7t2cTEPEpY98Tu1wvQkPfq/XwqE=
+      - PROXY_GRPC_PORT=8080
+      - HTTP_PORT=8081
+      - PROCESSOR_DEFAULT_URL=http://payment-processor-default:8080
+      - PROCESSOR_FALLBACK_URL=http://payment-processor-fallback:8080
+    networks:
+      - payment-processor
+      - rinha-net
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: "110MB"
+
+  api02:
+    <<: *api
+    hostname: api02
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: "110MB"
+
+  lb:
+    image: nginx:1.27.0-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "9999:9999"
+    networks:
+      - payment-processor
+      - rinha-net
+    depends_on:
+      - api01
+      - api02
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: "50MB"
+
+networks:
+  payment-processor:
+    external: true
+  rinha-net:
+    driver: bridge

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package io.eigr.labs.spawn.rinha;
+
+import "spawn/actors/extensions.proto";
+
+message Payment { 
+  string correlationId = 1 [(.spawn.actors.actor_id) = true];
+  double amount = 2;
+}
+
+message PaymentActorState {
+  double totalAmount = 2;
+}
