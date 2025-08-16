@@ -14,8 +14,6 @@ defmodule RinhaPayments.Payments.Client do
 
     case Req.post(url: url, json: body, receive_timeout: 2_000) do
       {:ok, %{status: code} = _resp} when code in 200..299 ->
-        # fee = Float.round(payment.amount * fee_rate, 2)
-        # net = Float.round(payment.amount - fee, 2)
         {:ok, 0.0, 0.0}
 
       {:ok, %{status: code, body: resp_body}} ->
