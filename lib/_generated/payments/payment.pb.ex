@@ -79,7 +79,21 @@ defmodule Io.Eigr.Labs.Spawn.Rinha.PaymentActorState do
       name: "PaymentActorState",
       field: [
         %Google.Protobuf.FieldDescriptorProto{
-          name: "totalAmount",
+          name: "total_amount",
+          extendee: nil,
+          number: 1,
+          label: :LABEL_OPTIONAL,
+          type: :TYPE_DOUBLE,
+          type_name: nil,
+          default_value: nil,
+          options: nil,
+          oneof_index: nil,
+          json_name: "totalAmount",
+          proto3_optional: nil,
+          __unknown_fields__: []
+        },
+        %Google.Protobuf.FieldDescriptorProto{
+          name: "total_fallback_amount",
           extendee: nil,
           number: 2,
           label: :LABEL_OPTIONAL,
@@ -88,7 +102,49 @@ defmodule Io.Eigr.Labs.Spawn.Rinha.PaymentActorState do
           default_value: nil,
           options: nil,
           oneof_index: nil,
-          json_name: "totalAmount",
+          json_name: "totalFallbackAmount",
+          proto3_optional: nil,
+          __unknown_fields__: []
+        },
+        %Google.Protobuf.FieldDescriptorProto{
+          name: "default",
+          extendee: nil,
+          number: 3,
+          label: :LABEL_OPTIONAL,
+          type: :TYPE_INT32,
+          type_name: nil,
+          default_value: nil,
+          options: nil,
+          oneof_index: nil,
+          json_name: "default",
+          proto3_optional: nil,
+          __unknown_fields__: []
+        },
+        %Google.Protobuf.FieldDescriptorProto{
+          name: "fallback",
+          extendee: nil,
+          number: 4,
+          label: :LABEL_OPTIONAL,
+          type: :TYPE_INT32,
+          type_name: nil,
+          default_value: nil,
+          options: nil,
+          oneof_index: nil,
+          json_name: "fallback",
+          proto3_optional: nil,
+          __unknown_fields__: []
+        },
+        %Google.Protobuf.FieldDescriptorProto{
+          name: "requested_at",
+          extendee: nil,
+          number: 5,
+          label: :LABEL_OPTIONAL,
+          type: :TYPE_STRING,
+          type_name: nil,
+          default_value: nil,
+          options: nil,
+          oneof_index: nil,
+          json_name: "requestedAt",
           proto3_optional: nil,
           __unknown_fields__: []
         }
@@ -105,5 +161,9 @@ defmodule Io.Eigr.Labs.Spawn.Rinha.PaymentActorState do
     }
   end
 
-  field :totalAmount, 2, type: :double
+  field :total_amount, 1, type: :double, json_name: "totalAmount"
+  field :total_fallback_amount, 2, type: :double, json_name: "totalFallbackAmount"
+  field :default, 3, type: :int32
+  field :fallback, 4, type: :int32
+  field :requested_at, 5, type: :string, json_name: "requestedAt"
 end

@@ -1,4 +1,4 @@
-FROM elixir:1.18-alpine AS builder
+FROM elixir:1.18.1-alpine AS builder
 
 ENV MIX_ENV=prod
 
@@ -35,7 +35,7 @@ RUN mix deps.get \
 # ---- Application Stage ----
 FROM alpine:3.20
 
-RUN apk add --no-cache --update zstd ncurses-libs libstdc++ libgcc openssl-dev
+RUN apk add --no-cache --update zstd ncurses-libs libstdc++ libgcc protobuf
 
 WORKDIR /app
 RUN chown nobody /app
@@ -45,9 +45,7 @@ ENV HOME=/app
 
 COPY rel/overlays/mtls.ssl.conf .
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/rinha_payments ./
-COPY --from=builder /app/priv ./
-
-RUN ls -ltr /app/priv
+COPY priv/ /app/priv
 
 RUN mkdir -p /app/.cache/bakeware/ && chmod 777 /app/.cache/bakeware/
 RUN touch /.erlang.cookie && chmod 777 /.erlang.cookie

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package io.eigr.labs.spawn.rinha.actors;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "payments/payment_summary.proto";
+import "spawn/actors/extensions.proto";
+
+service PaymentSummaryActor {
+  option (.spawn.actors.actor) = {
+    kind: PROJECTION
+    stateful: true
+    state_type: ".io.eigr.labs.spawn.rinha.PaymentSummaryProjection"
+    strict_events_ordering: false
+    subjects: [
+      { actor: "PaymentActor", source_action: "Payment", action: "Summarize" }
+    ]
+    events_retention_strategy: {
+      duration_ms: 86000
+    }
+  };
+
+  rpc GetPaymentSummary(google.protobuf.Empty) returns (.io.eigr.labs.spawn.rinha.PaymentSummaryResponse) {
+    option (google.api.http) = {
+      get : "/summary"
+      body : "*"
+    };
+  }
+}

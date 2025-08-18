@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package io.eigr.labs.spawn.rinha;
 
-import "payments/payment.proto";
 import "spawn/actors/extensions.proto";
 
 message Totals {
@@ -10,14 +9,20 @@ message Totals {
   double totalAmount = 2;
 }
 
-message PaymentSummary {
+message PaymentSummaryProjection {
   string id = 1 [(.spawn.actors.actor_id) = true];
 
-  string from = 2 [(.spawn.actors.searchable) = true];
+  string requested_at = 2;
 
-  string to = 3 [(.spawn.actors.searchable) = true];
+  Totals default = 3;
 
-  Totals default = 4;
-  
-  Totals fallback = 5;
+  Totals fallback = 4;
+}
+
+message PaymentSummaryResponse {
+  string id = 1 [(.spawn.actors.actor_id) = true];
+
+  Totals default = 2;
+
+  Totals fallback = 3;
 }

@@ -9,7 +9,8 @@ defmodule RinhaPayments.Application do
         SpawnSdk.System.Supervisor,
         system: "rinha-system",
         actors: [
-          RinhaPayments.Actors.PaymentActor
+          RinhaPayments.Actors.PaymentActor,
+          RinhaPayments.Actors.PaymentSummaryActor
         ]
       }
     ]

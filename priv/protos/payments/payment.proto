@@ -10,5 +10,10 @@ message Payment {
 }
 
 message PaymentActorState {
-  double totalAmount = 2;
+  double total_amount = 1;
+  double total_fallback_amount = 2;
+  int32 default = 3;
+  int32 fallback = 4;
+  string requested_at = 5;
 }
+
